@@ -2,7 +2,7 @@
 
 class Program
 {
-    // istruzioni
+    // Istruzioni iniziali
     static void MostraIstruzioni()
     {
         Console.WriteLine("==============================================");
@@ -17,7 +17,7 @@ class Program
         Console.WriteLine("Oggetti possibili:");
         Console.WriteLine("• Nanokit Medico (+10 vita)");
         Console.WriteLine("• Stim di Rigenerazione (+20 vita)");
-        Console.WriteLine("• Pistola a Ioni (+1 danno)");
+        Console.WriteLine("• Pistola (+1 danno)");
         Console.WriteLine("• Spada Magnetica (+2 danno)");
         Console.WriteLine("• Motore Sub-Luce Danneggiato (cavalcatura +1 casella)");
         Console.WriteLine("==============================================");
@@ -25,7 +25,7 @@ class Program
         Console.ReadLine();
     }
 
-    // Mostra i stati del giocatore vita,danno e zaino stampanti ripetutamente su ogni casella
+    // Mostra lo status del giocatore: vita, danno, probabilità fuga e zaino
     static void MostraStatus(int numeroCasella, int puntiVita, int danno, int probabilitaFuga, string[] zaino)
     {
         Console.WriteLine("----------------------------------------");
@@ -33,10 +33,9 @@ class Program
         Console.WriteLine($"Vita: {puntiVita} | Danno: {danno} | Probabilità fuga: {probabilitaFuga}");
         Console.WriteLine("Zaino:");
 
-        bool zainoVuoto = true; // Variabile per controllare se lo zaino è vuoto
+        bool zainoVuoto = true;
         for (int i = 0; i < zaino.Length; i++)
         {
-            // Se lo zaino  non è vuoto lo stampo 
             if (zaino[i] != "")
             {
                 Console.WriteLine(" - " + zaino[i]);
@@ -45,7 +44,7 @@ class Program
         }
         if (zainoVuoto)
         {
-            Console.WriteLine("(vuoto)"); //altrimneti stampo che lo zaino e vuoto
+            Console.WriteLine("(vuoto)");
         }
 
         Console.WriteLine("----------------------------------------");
@@ -53,34 +52,39 @@ class Program
         Console.ReadLine();
     }
 
-    // Oggetto casuale 
+    // Oggetto casuale che può essere trovato
     static string TrovaOggettoCasuale(Random rnd)
     {
-        string[] oggetti = { "Nanokit Medico", "Stim di Rigenerazione", "Pistola ", "Spada Magnetica", "Motore Sub-Luce Danneggiato" };
-        int indice = rnd.Next(oggetti.Length); // sceglie un numero casuale tra 0 e lunghezza dell'array oggetti
-        return oggetti[indice]; // restituisce l'oggetto casuale
+        string[] oggetti = {
+            "Nanokit Medico (+10 vita)",
+            "Stim di Rigenerazione (+20 vita)",
+            "Pistola (+1 danno)",
+            "Spada Magnetica (+2 danno)",
+            "Motore Sub-Luce Danneggiato (cavalcatura +1 casella)" };
+
+        int indice = rnd.Next(oggetti.Length); // Sceglie un numero casuale tra 0 e lunghezza dell'array oggetti
+        return oggetti[indice]; // Restituisce l'oggetto casuale
     }
 
-    // Aggiunge oggetto zaino
+    // Aggiungi un oggetto nello zaino
     static void AggiungiOggettoNelloZaino(string[] zaino, string oggetto)
     {
-        for (int i = 0; i < zaino.Length; i++) //ok
+        for (int i = 0; i < zaino.Length; i++)
         {
             if (zaino[i] == "")
             {
                 zaino[i] = oggetto;
-                Console.WriteLine($"Hai aggiunto {oggetto} allo zaino!");
+                Console.WriteLine("Hai aggiunto " + oggetto + " allo zaino!");
                 Console.WriteLine("Premi INVIO per continuare...");
                 Console.ReadLine();
-                return;// Termina la funzione una volta che l'oggetto è stato aggiunto
-
+                return;
             }
         }
         Console.WriteLine("Lo zaino è pieno! Non puoi raccogliere questo oggetto.");
     }
 
-    // Usa un oggetto
-    static void UsaOggetto(string oggetto, ref int puntiVita, ref bool cavalcatura, ref int danno) // ok 
+    // Usa un oggetto (es: medikit, pistola, ecc.)
+    static void UsaOggetto(string oggetto, ref int puntiVita, ref bool cavalcatura, ref int danno)
     {
         if (oggetto == "Nanokit Medico")
         {
@@ -92,7 +96,7 @@ class Program
             Console.WriteLine("+20 vita!");
             puntiVita += 20;
         }
-        else if (oggetto == "Pistola ")
+        else if (oggetto == "Pistola")
         {
             Console.WriteLine("+1 danno!");
             danno += 1;
@@ -104,18 +108,15 @@ class Program
         }
         else if (oggetto == "Motore Sub-Luce Danneggiato")
         {
-            Console.WriteLine(" hai ottenuto una cavalcatura! +1 casella");
+            Console.WriteLine("Hai ottenuto una cavalcatura! +1 casella");
             cavalcatura = true;
         }
-        else
-        {
-            Console.WriteLine("Oggetto non utilizzabile ora.");
-        }
+
         Console.WriteLine("Premi INVIO per continuare...");
         Console.ReadLine();
     }
 
-    // Rimuove oggetto dallo zaino
+    // Rimuove un oggetto dallo zaino
     static void RimuoviOggettoDalloZaino(string[] zaino, string oggetto)
     {
         for (int i = 0; i < zaino.Length; i++)
@@ -128,10 +129,11 @@ class Program
         }
     }
 
-    // Combattimento
-    static void Combattimento(ref int puntiVitaGiocatore, int dannoGiocatore, Random rnd, string nemico, int vitaNemico, int dannoNemico, int probabilitaFuga) // perfetta
+    // Gestisce il combattimento con un nemico
+    static void Combattimento(ref int puntiVitaGiocatore, int dannoGiocatore, Random rnd, string nemico, int vitaNemico, int dannoNemico, int probabilitaFuga)
     {
-        Console.WriteLine($"\nCombattimento contro: {nemico} | Vita nemico: {vitaNemico} | Danno: {dannoNemico}");
+        Console.WriteLine($"Combattimento contro: {nemico} | Vita nemico: {vitaNemico} | Danno: {dannoNemico}");
+
         Console.WriteLine("Premi INVIO per continuare...");
         Console.ReadLine();
 
@@ -145,41 +147,41 @@ class Program
             }
             else
             {
-                int danno = rnd.Next(1, dannoGiocatore + 1);//danno del nemico ... +1 al danno del nemico
+                int danno = rnd.Next(1, dannoGiocatore + 1);
                 vitaNemico -= danno;
-                Console.WriteLine($"Infliggi {danno} danni!");
+                Console.WriteLine("Infliggi " + danno + " danni!");
 
                 if (vitaNemico > 0)
                 {
-                    int dannoSubito = rnd.Next(1, dannoNemico + 1);//idem danno del giocatore 
-
+                    int dannoSubito = rnd.Next(1, dannoNemico + 1);
                     puntiVitaGiocatore -= dannoSubito;
-                    Console.WriteLine($"Subisci {dannoSubito} danni!");
+                    Console.WriteLine("Subisci " + dannoSubito + " danni!");
                 }
             }
+
             Console.WriteLine("Premi INVIO per continuare...");
             Console.ReadLine();
         }
 
         if (puntiVitaGiocatore <= 0)
         {
-            Console.WriteLine("Sei stato annientato!!!");
+            Console.WriteLine("Sei stato annientato!!! Riprova sarai più fortunato la prossima volta!");
         }
         else
         {
-            Console.WriteLine("Hai sconfitto il nemico!");
+            Console.WriteLine("Grande, sei riuscito a sconfiggere il nemico!");
         }
 
         Console.WriteLine("Premi INVIO per continuare...");
         Console.ReadLine();
     }
 
-    // Evento casella
+    // Gestisce l'evento nella casella
     static void EventoCasella(ref int puntiVita, ref int danno, ref int probabilitaFuga, ref bool cavalcatura, string[] zaino, Random rnd, string descrizioneCasella)
     {
         int tipoEvento = rnd.Next(0, 3); // 0=combattimento, 1=oggetto, 2=personaggio
 
-        if (tipoEvento == 0)//combattimento
+        if (tipoEvento == 0) // combattimento
         {
             Console.WriteLine("Hai incontrato un nemico!");
 
@@ -189,42 +191,68 @@ class Program
                 {
                     Console.WriteLine($"Vuoi usare {zaino[i]} prima del combattimento? (s/n)");
                     string risposta = Console.ReadLine();
+
                     if (risposta == "s")
                     {
                         UsaOggetto(zaino[i], ref puntiVita, ref cavalcatura, ref danno);
-                        zaino[i] = "";
+                        zaino[i] = ""; // Rimuove l'oggetto dallo zaino
+                    }
+                    else if (risposta == "n")
+                    {
+                        Console.WriteLine("Non utilizzerai l'oggetto.");
                     }
                 }
-            }
 
-            int vitaNemico = rnd.Next(5, 11);
-            int dannoNemico = rnd.Next(1, 4);
-            Combattimento(ref puntiVita, danno, rnd, "Ombroforme Minore", vitaNemico, dannoNemico, probabilitaFuga);
+                int vitaNemico = rnd.Next(5, 11); // Vita del nemico tra 5 e 10
+                int dannoNemico = rnd.Next(1, 4); // Danno del nemico tra 1 e 3
+
+                Combattimento(ref puntiVita, danno, rnd, "Alieno", vitaNemico, dannoNemico, probabilitaFuga);
+            }
         }
-        else if (tipoEvento == 1)//oggetto
+        else if (tipoEvento == 1) // oggetto
         {
             string oggetto = TrovaOggettoCasuale(rnd);
-            Console.WriteLine($"Hai trovato: {oggetto}. Vuoi raccoglierlo? (s/n)");
+            Console.WriteLine("Hai trovato: " + oggetto + " Vuoi raccoglierlo? (s/n)");
             string risposta = Console.ReadLine();
-            if (risposta == "s") AggiungiOggettoNelloZaino(zaino, oggetto);
+
+            if (risposta == "s")
+            {
+                AggiungiOggettoNelloZaino(zaino, oggetto);
+            }
         }
-        else if (tipoEvento == 2)//personaggio
+        else if (tipoEvento == 2) // personaggio
         {
             int personaggio = rnd.Next(0, 3);
 
             if (personaggio == 0)
             {
                 Console.WriteLine("Incontri un Ranger sopravvissuto che ti offre un bonus!");
-                Console.WriteLine("1) Accetta +10 vita  2) Ignora");
+                Console.WriteLine("1) Accetta  2) Ignora");
                 string scelta = Console.ReadLine();
-                if (scelta == "1") puntiVita += 10;
+                if (scelta == "1")
+                {
+                    Console.WriteLine("Il Ranger ti cura! +10 vita");
+                    puntiVita += 10;
+                }
+                else if (scelta == "2")
+                {
+                    Console.WriteLine("Ignori il Ranger e prosegui il tuo viaggio");
+                }
             }
             else if (personaggio == 1)
             {
                 Console.WriteLine("Un mercante interstellare ti offre una scelta:");
-                Console.WriteLine("1) Aggiungi una Pistola a Ioni  2) Niente");
+                Console.WriteLine("1) Aggiungi bonus   2) Ignora");
                 string scelta = Console.ReadLine();
-                if (scelta == "1") AggiungiOggettoNelloZaino(zaino, "Pistola a Ioni");
+                if (scelta == "1")
+                {
+                    Console.WriteLine("Il mercante ti offre una pistola!");
+                    AggiungiOggettoNelloZaino(zaino, "Pistola");
+                }
+                else if (scelta == "2")
+                {
+                    Console.WriteLine("Ignori il mercante e prosegui il tuo viaggio");
+                }
             }
             else
             {
@@ -248,101 +276,117 @@ class Program
         Random rnd = new Random();
 
         // Scelta personaggio
-        Console.WriteLine("Scegli il tuo personaggio: 1) A-47  2) Kael  3) Nyra");
+        Console.WriteLine("Scegli il tuo personaggio: 1) A-47 (+5 vita), 2) Kael (+1 danno), 3) Nyra (+1 fuga)");
         string scelta = Console.ReadLine();
 
-        int puntiVita = 20, danno = 2, probabilitaFuga = 1;
+        int puntiVita = 50, danno = 5, probabilitaFuga = 2;
         bool cavalcatura = false;
 
-        if (scelta == "1") {
-            puntiVita += 5;
-        }
-        else if (scelta == "2") {
-            danno += 1;
-        }
-        else if (scelta == "3") {
-            probabilitaFuga += 1;
-        }
+        if (scelta == "1") { puntiVita += 5; }
+        else if (scelta == "2") { danno += 1; }
+        else if (scelta == "3") { probabilitaFuga += 1; }
 
-        // ZAINO
+        // Zaino
         string[] zaino = new string[10];
         for (int i = 0; i < zaino.Length; i++)
         {
             zaino[i] = "";
         }
 
-        int posizione = 0;
+        int posizione = 0;// iniziallizzo posizione prima del ciclo whikle   
 
-        // MAPPA
+        // Mappa [20]
         string[] mappa = {
-            "Detriti Orbitali",
-            "Stiva della Falcon-03",
-            "Tunnel di Manutenzione",
-            "Settore RAD-2",
-            "Laboratorio Abbandonato",
-            "Corridoi Meccanici",
-            "Serbatoi Criogenici",
-            "Hangar Fantasma",
-            "Osservatorio Stellare",
-            "Giardino Idroponico",
-            "Stanza degli Ologrammi",
-            "Archivio Quantico",
-            "Cunicolo di Ventilazione",
-            "Nodo Energetico Centrale",
-            "Condotti di Rifiuti",
-            "Laboratorio di Xenobiologia",
-            "Ponte di Comando",
-            "Cubo di Stabilizzazione",
-            "Corridoio dell’Eclissi",
-            "ARK-01"
+            "Detriti Orbitali - Resti di navi evacuate, pericolo di danni.",
+            "Stiva della Falcon-03 - Nave abbandonata, casse e macchinari danneggiati.",
+            "Tunnel di Manutenzione - Passaggi stretti e oscuri, l'eco dei passi ti segue.",
+            "Settore RAD-2 - Zona ad alta radiazione, rischi di danni e risorse utili.",
+            "Laboratorio Abbandonato - Strutture scientifiche rovinate, possibili dati vitali.",
+            "Corridoi Meccanici - Labirinto industriale, luci tremolanti e macchine rotte.",
+            "Serbatoi Criogenici - Camere ghiacciate, tecnologia obsoleta, possibili risorse.",
+            "Hangar Fantasma - Grande hangar vuoto, ricordi di navi scomparse.",
+            "Osservatorio Stellare - Vista mozzafiato, ma senza macchine operative.",
+            "Giardino Idroponico - Piante artificiali in un ambiente oscuro e minaccioso.",
+            "Stanza degli Ologrammi - Proiezioni di un passato ormai perso.",
+            "Archivio Quantico - Biblioteca di conoscenza, rischio di corruzione dei dati.",
+            "Cunicolo di Ventilazione - Passaggio buio e stretto, facile perdersi.",
+            "Nodo Energetico Centrale - Cuore energetico, rischio di cortocircuiti.",
+            "Condotti di Rifiuti - Ambienti fetidi, pericoli nascosti ma possibili risorse.",
+            "Laboratorio di Xenobiologia - Ricerca su alieni, pericoli e risorse scientifiche.",
+            "Ponte di Comando - Sala di controllo deserta, pericolo imminente.",
+            "Cubo di Stabilizzazione - Controllo gravitazionale, strumenti dimenticati.",
+            "Corridoio dell’Eclissi - Tunnel oscuro, l'energia oscura minaccia ogni passo.",
+            "ARK-01 - Ultima speranza per fermare l'Eclissi e salvare la galassia."
         };
 
-        while (puntiVita > 0 && posizione < 19)
+        // ciclo 
+
+        while (puntiVita > 0 && posizione < 19 )
         {
-            Console.Clear();
+            Console.Clear(); //hit cancella la console a ogni giro del ciclo
             Console.WriteLine($"Sei in: {mappa[posizione]}");
-            MostraStatus(posizione + 1, puntiVita, danno, probabilitaFuga, zaino);
+            MostraStatus(posizione + 1, puntiVita, danno, probabilitaFuga, zaino); 
 
-            Console.WriteLine("Premi INVIO per tirare il dado...");
-            Console.ReadLine();
+           
+            Console.WriteLine("Vuoi tirare il dado?...(s/n)");
+            string risposta = Console.ReadLine();
 
-            int tiro = TiraDado(rnd);
-            int avanzamento = tiro;
-
-            if (cavalcatura)
+            
+            if (risposta == "s")
             {
-                avanzamento += 1;
-                Console.WriteLine("La cavalcatura ti fa avanzare di 1 casella extra!");
+                int tiro = TiraDado(rnd);
+                int avanzamento = tiro;
+
+                
+                if (cavalcatura)
+                {
+                    avanzamento += 1;
+                    Console.WriteLine("La cavalcatura ti fa avanzare di 1 casella extra!");
+                }
+
+             
+                posizione += avanzamento;   // Avanza la posizione sulla mappa
+
+               
+                if (posizione > 19)//se esce dalla mappa la limita all 'ultima casella
+                {
+                    posizione = 19;
+                }
+
+                Console.WriteLine($"Hai tirato {tiro}. Avanzi di {avanzamento} caselle.");
+                Console.WriteLine($"Ora sei in: {mappa[posizione]}");
+                Console.WriteLine("Premi INVIO per continuare...");
+                Console.ReadLine();
+
+               
+                EventoCasella(ref puntiVita, ref danno, ref probabilitaFuga, ref cavalcatura, zaino, rnd, mappa[posizione]);
+
+             
+                if (puntiVita <= 0)
+                {
+                    Console.WriteLine("Sei morto... Game Over.");
+                  
+                }
+            }
+            else
+            {
+               
+                Console.WriteLine("Hai scelto di uscire dal gioco.");
+                return;
+                
             }
 
-            posizione += avanzamento;
-            if (posizione > 19)
+          
+            if (puntiVita > 0 && posizione >= 19)
             {
-                posizione = 19;
+                Console.WriteLine("Sei arrivato all'ARK-01! Missione completata!");
+               
             }
-
-            Console.WriteLine($"Hai tirato {tiro}. Avanzi di {avanzamento} caselle.");
-            Console.WriteLine($"Ora sei in: {mappa[posizione]}");
-            Console.WriteLine("Premi INVIO per continuare...");
-            Console.ReadLine();
-
-            EventoCasella(ref puntiVita, ref danno, ref probabilitaFuga, ref cavalcatura, zaino, rnd, mappa[posizione]);
-
-            if (puntiVita <= 0)
-            {
-                Console.WriteLine("Sei morto... Game Over.");
-            }
-    }
-
-        if (puntiVita > 0 && posizione >= 19)
-        {
-            Console.WriteLine("Sei arrivato all'ARK-01! Missione completata!");
         }
 
         Console.WriteLine("Premi INVIO per uscire...");
         Console.ReadLine();
+
     }
+
 }
-
-
-
